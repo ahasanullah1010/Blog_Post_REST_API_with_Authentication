@@ -9,6 +9,7 @@ use App\Http\Requests\RegistrationRequest;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use Exception;
+use PhpParser\Node\Stmt\TryCatch;
 
 class AuthController extends Controller
 {
@@ -43,7 +44,8 @@ class AuthController extends Controller
 
 
     public function login(Request $request){
-        $validator = Validator::make($request->all(), [
+        try {
+            $validator = Validator::make($request->all(), [
             'email' => 'required|email',
             'password' => 'required'
         ]);
@@ -72,13 +74,18 @@ class AuthController extends Controller
             'status' => 200,
             'token' => $token 
         ], 200);
+        } catch (\Throwable $th) {
+            return response()->json([
+                'message' => 'Something went wrong.',
+            ], 500);
+        }
 
     }
 
 
     public function logout(){
-
-        Auth::user()->currentAccessToken()->delete();
+        try {
+             Auth::user()->currentAccessToken()->delete();
 
         // delete all tokens
         // Auth::user()->tokens()->delete();
@@ -87,5 +94,12 @@ class AuthController extends Controller
             'message' => 'User logged out Successfully',
             'status' => 200
         ], 200);
+        } catch (\Throwable $th) {
+            return response()->json([
+                'message' => 'Something went wrong.',
+            ], 500);
+        }
+
+       
     }
 }

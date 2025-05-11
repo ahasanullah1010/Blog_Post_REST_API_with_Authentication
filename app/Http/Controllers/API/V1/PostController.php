@@ -36,7 +36,8 @@ class PostController extends Controller
      */
     public function store(PostRequest $request)
     {
-        $data = $request->validated();
+        try {
+           $data = $request->validated();
 
         $post = Post::create($data);
 
@@ -45,6 +46,12 @@ class PostController extends Controller
             'message' => 'Post Created Successfully',
             'status' => 201 
         ], 201);
+        } catch (\Throwable $th) {
+            return response()->json([
+                'message' => 'Something went wrong.',
+            ], 500);
+        }
+        
 
     }
 
@@ -53,7 +60,8 @@ class PostController extends Controller
      */
     public function show(string $id)
     {
-         $post = Post::find($id);
+        try {
+            $post = Post::find($id);
 
         if(!$post){
             return response()->json([
@@ -67,6 +75,12 @@ class PostController extends Controller
             'message' => 'success',
             'status' => 200 
         ], 200);
+        } catch (\Throwable $th) {
+            return response()->json([
+                'message' => 'Something went wrong.',
+            ], 500);
+        }
+         
     }
 
     /**
@@ -74,7 +88,8 @@ class PostController extends Controller
      */
     public function update(PostRequest $request, string $id)
     {
-        $post = Post::find($id);
+        try {
+            $post = Post::find($id);
 
         if(!$post){
             return response()->json([
@@ -92,6 +107,12 @@ class PostController extends Controller
             'message' => 'Post Updated Successfully',
             'status' => 200 
         ], 200);
+        } catch (\Throwable $th) {
+            return response()->json([
+                'message' => 'Something went wrong.',
+            ], 500);
+        }
+        
     }
 
     /**
@@ -99,7 +120,8 @@ class PostController extends Controller
      */
     public function destroy(string $id)
     {
-         $post = Post::find($id);
+        try {
+            $post = Post::find($id);
 
         if(!$post){
             return response()->json([
@@ -114,5 +136,11 @@ class PostController extends Controller
                 'message' => 'Post deleted Successfully',
                 'status' => 200
                 ], 200);
+        } catch (\Throwable $th) {
+            return response()->json([
+                'message' => 'Something went wrong.',
+            ], 500);
+        }
+         
     }
 }
